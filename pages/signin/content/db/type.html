@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+      <div class="card card-plain mt-8">
+        <div class="card-header pb-0 text-left bg-transparent">
+          <h3 class="font-weight-bolder text-info text-gradient">欢迎使用</h3>
+          <p class="mb-0" id="intro"></p>
+        </div>
+        <div class="card-body">
+          <form role="form">
+            <label>选择</label>
+            <div class="mb-3" id="chooser">
+              
+            </div>
+            <div class="text-center">
+              <button type="button" onclick="login()" class="btn bg-gradient-info w-100 mt-4 mb-0">确定</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+          style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const url = new URL(window.location.href)
+  window.plat = url.searchParams.get('platform')
+  window.platlist = {
+    cfworker: {
+      kv: "CloudFlareKV",
+      http: "http简易数据库"
+    },
+    vercel:{
+      mongodb: "MongoDB数据库",
+      http: "http简易数据库"
+    },
+    node:{
+      mongodb: "MongoDB",
+      http: "http简易数据库"
+    }
+  }
+  document.querySelector('#intro').innerHTML = `您的平台选择为${window.plat},请选择适配的数据库类型`
+  document.querySelector('#chooser').innerHTML = (() => {
+    p = `<select id="db" type="text" class="form-control" placeholder="数据库类型" aria-label="Db"
+                aria-describedby="db-addon" list="dblist">
+              <datalist id="dblist">`
+    for (let i in platlist[plat]) {
+      p += `<option value="${i}">${platlist[plat][i]}</option>`
+
+    }
+    p += `</datalist></select>`
+    return p
+
+  })()
+  window.login = () => {
+
+    url.searchParams.set('page', 'db')
+    url.searchParams.set('type', 'setdb')
+    url.searchParams.set('dbtype', document.querySelector('#db').value)
+    
+    url.searchParams.set('platform', window.plat)
+    if(document.querySelector('#db').value == 'kv'){
+      url.searchParams.set('type','buildconfig')
+    }
+    WGoto(url.href)
+  }
+</script>

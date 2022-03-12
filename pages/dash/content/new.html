@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body px-0 pt-0 pb-2">
+            <div class="input-group">
+                <span class="input-group-text text-body">文件路径</span>
+                <input type="text" id="name" class="form-control" value="/HelloWorld.md">
+            </div>
+            </br>
+
+            <button type="button" class="btn btn-outline-primary btn-sm mb-0" onclick="new_post()">新建为发布文章</button></br>
+            <button type="button" class="btn btn-outline-secondary btn-sm mb-0" onclick="new_draft()">新建为草稿</button>
+        </div></div>
+    </div>
+</div>
+
+<script>
+    window.url = new URL(window.location.href)
+    let v = document.getElementById('name').value
+    if(v.split('.').pop() !== 'md'){
+        v+='.md'
+    }
+    window.new_post = () => {
+        url.searchParams.set('name',"source/_posts/" + v)
+        url.searchParams.set('action', 'edit') 
+        WGoto(url.href)
+    }
+    window.new_draft = () => {
+        url.searchParams.set('name',"source/_drafts/" + v)
+        url.searchParams.set('action', 'edit')
+        WGoto(url.href)
+    }
+</script>

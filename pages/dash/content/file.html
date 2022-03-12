@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-header pb-0">
+        <h6>文件管理器</h6>
+      </div>
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">文件(夹)名</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">大小</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--API_LIST_BODY-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>(async () => {
+    window.onpageshow = function (event) {
+      window.url = new URL(window.location.href);
+    }
+    
+
+    window.load = (name, type, download_url) => {
+
+      url.searchParams.set('path', (url.searchParams.get('path') + '/' + name).replace(/\/+/g, '/'));
+      if (type == 'dir') {
+        WGoto(url.href);
+      } else if (type == 'img') {
+        url.searchParams.set('action', 'preview');
+        url.searchParams.set('ptype', 'img');
+        url.searchParams.set('download_url', download_url);
+        WGoto(url.href);
+      } else {
+        url.searchParams.set('action', 'edit');
+
+        WGoto(url.href);
+      }
+    }
+    window.back = () => {
+
+      url.searchParams.set('path', url.searchParams.get('path').split('/').slice(0, -1).join('/'));
+      WGoto(url.href);
+    }
+    window.backtotop = () => {
+      url.searchParams.set('path', '/');
+      WGoto(url.href);
+    }
+    window.file_delete = (path) => {
+      say.i('正在删除...');
+      const action_url = new URL('/api?page=api&action=edit&type=delete', window.location.origin);
+      action_url.searchParams.set('path', url.searchParams.get('path') + "/" + path);
+      fetch(action_url).then(res => res.json()).then(res => {
+        if (!!res.ok) {
+          say.s('删除成功,等CI完成后列表将自动刷新');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          say.e('删除失败!');
+        }
+      });
+
+    }
+  })()
+</script>

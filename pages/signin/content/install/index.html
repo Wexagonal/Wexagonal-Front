@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div class="card card-plain mt-8">
+                <div class="card-header pb-0 text-left bg-transparent">
+                    <h3 class="font-weight-bolder text-info text-gradient">开始配置</h3>
+                    <p class="mb-0" id="intro">选择您需要的配置功能，并点击按钮以完整配置</p>
+                </div>
+                <div class="card-body">
+                    <form role="form">
+                        <label>基础配置[必须]</label>
+                        <div class="text-center">
+                            <button type="button" class="btn bg-gradient-info w-100 mt-4 mb-0"
+                                id="config_basic_button">开始配置基础面板配置
+                            </button>
+                        </div>
+                        </br>
+                        <label>Hexo仓库绑定[必须]</label>
+                        <div class="text-center">
+                            <button type="button" class="btn bg-gradient-info w-100 mt-4 mb-0"
+                                id="bind_hexo_button">开始绑定Hexo</button>
+                        </div>
+                        </br>
+                        <label>编辑器配置[不可用]</label>
+                        <div class="text-center">
+                            <button type="button" id="config_editor_button" disabled
+                                class="btn bg-gradient-danger w-100 mt-4 mb-0">开始配置编辑器</button>
+                        </div>
+                        </br>
+                        <label>图床配置[不可用]</label>
+                        <div class="text-center">
+                            <button type="button" id="config_pichost_button" disabled
+                                class="btn bg-gradient-danger w-100 mt-4 mb-0">开始绑定配置图床</button>
+                        </div>
+
+                        <button type="button" id="finish_button"
+                            class="btn bg-gradient-success w-100 mt-4 mb-0">完成配置</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+                    style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    (() => {
+        const url = new URL(window.location.href)
+        if (!db.read('basic') || !db.read('hexo')) {
+            document.getElementById('finish_button').disabled = true
+        }
+        if (!!db.read('basic')) {
+
+            document.getElementById('config_basic_button').innerText = "重新配置基础面板配置"
+
+        }
+        if (!!db.read('hexo')) {
+            document.getElementById('bind_hexo_button').innerText = "重新绑定Hexo"
+        }
+        if (!!db.read('editor')) {
+            document.getElementById('config_editor_button').innerText = "重新配置编辑器"
+        }
+        if (!!db.read('pichost')) {
+            document.getElementById('config_pichost_button').innerText = "重新绑定配置图床"
+        }
+        document.getElementById('bind_hexo_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'bind_hexo')
+            WGoto(url.href)
+        })
+        document.getElementById('config_editor_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'config_editor')
+            WGoto(url.href)
+        })
+        document.getElementById('config_pichost_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'config_pichost')
+            WGoto(url.href)
+        })
+        document.getElementById('config_basic_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'signup')
+            WGoto(url.href)
+        })
+        document.getElementById('finish_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'finish')
+            url.searchParams.set('data',JSON.stringify(db.list()))
+            WGoto(url.href)
+        })
+    })()
+</script>

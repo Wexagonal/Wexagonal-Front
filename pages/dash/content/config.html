@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="https://NPM_CDN/codemirror@5.60.0/lib/codemirror.css" />
+<script src="https://NPM_CDN/codemirror@5.60.0/lib/codemirror.js"></script>
+<script src="https://NPM_CDN/js-base64@3.7.2/base64.js"></script>
+<link rel="stylesheet" href="https://NPM_CDN/codemirror@5.60.0/theme/material.css">
+<script src="https://NPM_CDN/codemirror@5.60.0/addon/hint/show-hint.js"></script>
+<link rel="stylesheet" href="https://NPM_CDN/codemirror@5.60.0/addon/hint/show-hint.css">
+<script src="https://NPM_CDN/codemirror@5.60.0/addon/hint/show-hint.js"></script>
+<script src="https://NPM_CDN/codemirror@5.60.0/addon/hint/anyword-hint.js"></script>
+<script src="https://NPM_CDN/codemirror@5.60.0/addon/hint/javascript-hint.js"></script>
+<script src="https://NPM_CDN/codemirror@5.60.0/mode/javascript/javascript.js"></script>
+
+<!--CODEMIRROR_IMPORT-->
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <textarea id="code"></textarea>
+        </div>
+        <div class="alert alert-info" style="color: aliceblue;">
+            <strong>提示：</strong>
+            <span>如需修改加密内容，请将键install改为false，并保存，然后登出。</span>
+        </div>
+        <p class="text-center" style="display:none;">
+            <button class="btn btn-primary">切换为 可视化编辑</button>
+        </p>
+    </div>
+</div>
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        theme: "material",
+        mode: 'javascript'
+    });
+    window.setbutton = () => {
+        document.getElementById('main_button')["style"] = "display:unset"
+        document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=upload()>
+      <i class="fa fa-upload"> </i>
+    </a>`
+    }
+    say.i('尝试从服务端获取配置...')
+    editor.setValue('loading...')
+    fetch('/dash?page=api&action=config&type=list').then(res => res.json()).then(res => {
+        editor.setValue(JSON.stringify(res.data, null, 4))
+        setbutton()
+        say.s('获取成功')
+    })
+
+    window.upload = async () => {
+        say.i('正在上传...')
+        document.getElementById('main_button').innerHTML = `
+            <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=alert('wait')>
+                 <i class="fa fa-spinner"> </i>
+            </a>`
+        const url = new URL(window.location.href)
+
+        let data = editor.getValue()
+        //检查data是否为有效的json
+        try {
+            JSON.parse(data)
+        } catch (e) {
+            setbutton()
+            say.e('此配置并非有效的JSON对象！请尝试重新修改！')
+            return
+        }
+        data = JSON.stringify(JSON.parse(data))
+        fetch('/dash?page=api&action=config&type=upload&config=' + encodeURIComponent(data)).then(res => res.json()).then(res => {
+            if (res.ok) {
+                document.getElementById('main_button').innerHTML = `
+                <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+                     <i class="fa fa-check"> </i>
+                </a>`
+                say.s('上传成功')
+                setTimeout(() => {
+                    setbutton()
+                }, 1000)
+            } else {
+                say.e('上传失败')
+            }
+        })
+    }
+</script>

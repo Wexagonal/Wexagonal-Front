@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-header pb-0">
+        <h6>文章类型选择</h6>
+        <a class="badge badge-sm" id="button_post_list" href="#" style="color:#fff">已发布</a>
+        <a class="badge badge-sm" id="button_draft_list" href="#" style="color:#fff">未发布</a>
+
+        <a class="badge badge-sm bg-gradient-danger" id="button_new" href="#" style="color:#fff">新增文件</a>
+
+
+      </div>
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">文件路径</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--API_LIST_BODY-->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (() => {
+    //判断url searchParams中的gettype 并为button_post_list 和 button_draft_list 设置class为bg-gradient-secondary或bg-gradient-success
+    window.url = new URL(window.location.href);
+    gettype = url.searchParams.get('gettype');
+    document.getElementById('button_new').href = (() => {
+      let url = new URL(window.location.href);
+      url.searchParams.set('gettype', 'new');
+      return url.href;
+    })()
+    if (gettype == 'post') {
+      document.getElementById('button_post_list').classList.add('bg-gradient-success');
+      document.getElementById('button_draft_list').classList.add('bg-gradient-secondary');
+      document.getElementById('button_draft_list').href = (() => {
+        let url = new URL(window.location.href);
+        url.searchParams.set('gettype', 'draft');
+        return url.href;
+      })()
+    } else if (gettype == 'draft') {
+      document.getElementById('button_draft_list').classList.add('bg-gradient-success');
+      document.getElementById('button_post_list').classList.add('bg-gradient-secondary');
+      document.getElementById('button_post_list').href = (() => {
+        let url = new URL(window.location.href);
+        url.searchParams.set('gettype', 'post');
+        return url.href;
+      })()
+    }
+    window.to_draft = async (path) => {
+      let url = new URL(window.location.href);
+      url.searchParams.set('page', 'api');
+      url.searchParams.set('action', 'edit');
+      //type move
+      url.searchParams.set('type', 'move');
+      url.searchParams.set('path', path);
+      const new_path = path.replace('_posts', '_drafts')
+      //newpath
+      url.searchParams.set('newpath', new_path);
+      say.i(`尝试将${path}移动到${new_path}...`);
+      const res = await fetch(url.href)
+      const json = await res.json()
+      if (json.ok) {
+        say.s(`移动成功！`);
+        setTimeout(() => {
+
+          window.location.reload();
+        }, 500);
+      } else {
+        say.e(`移动失败！`);
+      }
+    }
+    window.to_post = async (path) => {
+      let url = new URL(window.location.href);
+      url.searchParams.set('page', 'api');
+      url.searchParams.set('action', 'edit');
+      //type move
+      url.searchParams.set('type', 'move');
+      url.searchParams.set('path', path);
+      const new_path = path.replace('_drafts', '_posts')
+      //newpath
+      url.searchParams.set('newpath', new_path);
+      say.i(`尝试将${path}移动到${new_path}...`);
+      const res = await fetch(url.href)
+      const json = await res.json()
+      if (json.ok) {
+        say.s(`移动成功！`);
+        setTimeout(() => {
+
+          window.location.reload();
+        }, 500);
+      } else {
+        say.e(`移动失败！`);
+      }
+    }
+  })()
+</script>

@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+      <div class="card card-plain mt-8">
+        <div class="card-header pb-0 text-left bg-transparent">
+          <h3 class="font-weight-bolder text-info text-gradient">Hexo仓库配置已结束</h3>
+          <p class="mb-0">返回主菜单以配置其他功能</p>
+        </div>
+        <div class="card-body">
+          <form role="form">
+
+            <div class="text-center">
+              <button type="button" onclick="end()" class="btn bg-gradient-info w-100 mt-4 mb-0">结束并返回主菜单</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+        <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+          style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+  const url = new URL(window.location.href)
+  const q = (key) => {
+    return url.searchParams.get(key)
+  }
+
+
+  const end = () => {
+    db.write('hexo', {
+      repo: q('repo'),
+      username: q('repo').split('/')[0],
+      reponame: q('repo').split('/')[1],
+      token: q('token'),
+      workflow: q('workflow'),
+      branch: q('branch'),
+      config:JSON.parse(q('config'))
+    })
+    window.location.search = "?page=install&type=index"
+  }
+</script>

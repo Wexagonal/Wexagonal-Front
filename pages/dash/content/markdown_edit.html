@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="https://NPM_CDN/vditor@3.8.12/dist/index.css" />
+<script src="https://NPM_CDN/vditor@3.8.12/dist/index.min.js"></script>
+<script src="https://NPM_CDN/js-base64@3.7.2/base64.js"></script>
+<div class="row">
+    <div class="col-12">
+
+
+
+        <div class="card-body px-0 pt-0 pb-2">
+            <div class="card mb-4" id="editor">
+            </div>
+        </div>
+
+        <div class="alert alert-info" style="color: aliceblue;">
+            <strong>状态</strong>
+            <div id="info"></div>
+        </div>
+    </div>
+</div>
+<script>
+    window.url = new URL(window.location.href);
+    window.path = url.searchParams.get('name')
+    if (path.indexOf('//') != -1) {
+        path = path.replace(/\/\//g, '/')
+        url.searchParams.set('name', path)
+        WGoto(url.href)
+    }
+    addEventListener('load', async () => {
+        window.ed = new Vditor('editor', {
+            cache: {
+                enable: false
+
+            },
+            cdn: "https://npm.elemecdn.com/vditor@3.8.12",
+            toolbar: ["headings", 'bold', "italic", "strike", '|', 'edit-mode', 'fullscreen'],
+
+            value: 'loading...',
+            after() {
+                (async () => {
+                    if (window.localStorage.getItem('EDIT_' + url.searchParams.get('name'))) {
+
+                        document.getElementById('info').innerHTML = '<p onclick="clearcache()">从本地缓存中加载到最新版本!点我以清除缓存!</p>'
+                        setTimeout(() => {
+                            ed.setValue(window.localStorage.getItem('EDIT_' + url.searchParams.get('name')))
+                            say.w('从本地缓存中加载到最新版本!')
+                        }, 500);
+                    } else {
+                        document.getElementById('info').innerText = '正在从云端加载文件...'
+                        ed.setValue(await (async () => {
+
+                            say.i('尝试从服务器加载文件...')
+                            let res = await fetch(new URL('/dash?page=api&action=edit&type=download&path=' + url.searchParams.get('name'), window.location.origin), {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            })
+                            let data = await res.json()
+
+                            setbutton()
+
+                            document.getElementById('info').innerText = '已经从云端文件加载到最新版本!'
+                            say.s('文件加载成功!')
+                            return data.data || `
+---
+title: ${url.searchParams.get('name').split('/').pop().split('.')[0]}
+author: 
+tags:
+categories:
+date: ${new Date().toLocaleString()}
+---
+            `
+                        })())
+                    }
+
+                })();
+            }
+        })
+        window.setbutton = () => {
+            document.getElementById('main_button')["style"] = "display:unset"
+            document.getElementById('main_button').innerHTML = `
+             <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=upload()>
+              <i class="fa fa-upload"> </i>
+            </a>`
+        }
+        //设置p中的值
+        window.setcache = () => {
+            window.localStorage.setItem('EDIT_' + url.searchParams.get('name'), ed.getValue())
+        }
+        window.clearcache = () => {
+            window.localStorage.removeItem('EDIT_' + url.searchParams.get('name'))
+            window.location.reload()
+        }
+        setTimeout(() => {
+            setInterval(() => {
+                setcache()
+                document.getElementById('info').innerText = '保存成功,时间' + new Date().toLocaleString()
+            }, 60 * 1000);
+        }, 10000);
+
+        window.upload = async () => {
+            say.i('正在上传文件...')
+            document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=alert('wait')>
+      <i class="fa fa-spinner"> </i>
+    </a>`
+            const url = new URL(window.location.href)
+            let data = Base64.encode(ed.getValue())
+            fetch(new URL('/dash?page=api&action=edit&type=upload&path=' + url.searchParams.get('name'), window.location.origin), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: data
+            }).then(res => res.json()).then(res => {
+                if (res.ok) {
+                    document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="fa fa-check"> </i>
+    </a>`
+                    say.s('文件上传成功!')
+                    setTimeout(() => {
+                        setbutton()
+                    }, 1500);
+                } else {
+                    document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+        <i class="fa fa-exclamation"></i>
+    </a>`
+                }
+            })
+        }
+
+    })
+
+</script>

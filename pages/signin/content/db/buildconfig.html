@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div class="card card-plain mt-8">
+                <div class="card-header pb-0 text-left bg-transparent">
+                    <h3 class="font-weight-bolder text-info text-gradient">保存配置</h3>
+                    <p class="mb-0">请复制以下内容并按照要求完成数据库填写</p>
+                </div>
+                <div class="card-body">
+                    <form role="form">
+                        <label>配置数据</label>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="data"></textarea>
+                        </div>
+                        <label id="info"></label>
+                        <div class="text-center">
+                            <button type="button" onclick="login()"
+                                class="btn bg-gradient-info w-100 mt-4 mb-0">完成数据库配置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+                    style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (() => {
+        const url = new URL(
+            window.location.href
+        )
+        const plat = url.searchParams.get('platform')
+        const dbtype = url.searchParams.get('dbtype')
+        switch (dbtype) {
+            case 'http':
+                document.getElementById('data').innerHTML = JSON.stringify({
+                    type: "HTTP",
+                    endpoint: url.searchParams.get('endpoint'),
+                    token: url.searchParams.get('token')
+                })
+                break
+            case 'mongodb':
+                document.getElementById('data').innerHTML = JSON.stringify({
+                    type: "MONGODB",
+                    endpoint: url.searchParams.get('endpoint')
+                })
+                break
+            case 'kv':
+                document.getElementById('data').innerHTML = JSON.stringify({
+                    type: "KV"
+                })
+                break
+        }
+      const generate_info = {
+          node:"在当前目录下新建 launcher.config.json 文件，并填写如上内容",
+          cfworker:"设置变量键名为CONFIG, 键值如上内容",
+          vercel:"设置变量键名为CONFIG, 键值如上内容，之后重新部署"
+      }
+      document.getElementById('info').innerHTML = generate_info[plat]
+    })();
+    window.login = () => {
+        window.location.search = '' 
+    }
+</script>

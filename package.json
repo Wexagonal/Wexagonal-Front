@@ -1,0 +1,22 @@
+{
+  "name": "wexagonal_front",
+  "version": "0.0.1-beta-1",
+  "description": "",
+  "main": "sw.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hexo-Warrior/HexoWarrior_Front.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hexo-Warrior/HexoWarrior_Front/issues"
+  },
+  "homepage": "https://github.com/Hexo-Warrior/HexoWarrior_Front#readme"
+}

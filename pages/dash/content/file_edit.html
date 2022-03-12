@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="https://NPM_CDN/codemirror@5.60.0/lib/codemirror.css" />
+<script src="https://NPM_CDN/codemirror@5.60.0/lib/codemirror.js"></script>
+<script src="https://NPM_CDN/js-base64@3.7.2/base64.js"></script>
+<link rel="stylesheet" href="https://NPM_CDN/codemirror@5.60.0/theme/material.css">
+<!--CODEMIRROR_IMPORT-->
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <textarea id="code"></textarea>
+        </div>
+
+        <div class="alert alert-info" style="color: aliceblue;">
+            <strong>提示：</strong>
+            <span>完成编辑后点击右下角保存按钮以上传</span>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.url = new URL(window.location.href)
+    window.path = url.searchParams.get('path')
+    //判断path中是否有多个连续/,不包括一个/,如果有,则替换为一个/,如果没有,则不替换
+    if (path.indexOf('//') != -1) {
+        path = path.replace(/\/+/g, '/')
+        url.searchParams.set('path', path)
+        WGoto(url.href)
+    }
+    //文件后缀
+    window.ext = path.split('.').pop()
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        theme: "material",
+        mode: '<!--CODEMIRROR_MODE-->'
+    });
+    editor.setValue('loading...')
+    fetch(new URL('/dash?page=api&action=edit&type=download&path=' + path, window.location.origin), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }).then(res => res.json()).then(res => {
+        editor.setValue(res.data)
+
+        setbutton()
+    })
+
+    //控制main_button功能和外观
+    window.setbutton = () => {
+        document.getElementById('main_button')["style"] = "display:unset"
+        document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=upload()>
+      <i class="fa fa-upload"> </i>
+    </a>`
+    }
+    window.upload = async () => {
+        say.i('正在上传...')
+        document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" onclick=alert('wait')>
+      <i class="fa fa-spinner"> </i>
+    </a>`
+        const url = new URL(window.location.href)
+        let data = Base64.encode(editor.getValue())
+        fetch(new URL('/dash?page=api&action=edit&type=upload&path=' + path, window.location.origin), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: data
+        }).then(res => res.json()).then(res => {
+            if (res.ok) {
+                document.getElementById('main_button').innerHTML = `
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="fa fa-check"> </i>
+    </a>`
+                say.s('上传成功')
+                setTimeout(() => {
+                    setbutton()
+                }, 1000)
+            } else {
+                say.e('上传失败')
+            }
+        })
+    }
+</script>
