@@ -35,6 +35,11 @@
             toolbar: ["headings", 'bold', "italic", "strike", '|', 'edit-mode', 'fullscreen'],
 
             value: 'loading...',
+            upload:{
+                url: '/dash?page=api&action=img&type=upload',
+                fieldName:"file"
+
+            },
             after() {
                 (async () => {
                     if (window.localStorage.getItem('EDIT_' + url.searchParams.get('name'))) {

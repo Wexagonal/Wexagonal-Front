@@ -1,10 +1,11 @@
-const CACHE_NAME = 'Wexagonal';//可以为Cache版本号，但这样可能会导致缓存冗余累积
+
 let cachelist = [];
 const info = {
-    version: "0.0.1-beta-1",
-    dev: 0,
-    domain:"wexagonal.215213344.xyz"
+    version: "0.0.1-beta-2",
+    dev: 1,
+    domain: "localhost"
 }
+const CACHE_NAME = 'Wexagonal';
 self.addEventListener('install', async function (installEvent) {
     self.skipWaiting();
     installEvent.waitUntil(
@@ -147,7 +148,7 @@ const endnpm = async (path) => {
 }
 const handle = async (req) => {
     self.end = await db.read('endpoint')
-    self.end = self.end ? new URL(info.dev?'http://':"https://" + self.end + '/api') : null
+    self.end = self.end ? new URL((info.dev ? 'http://' : "https://") + self.end + '/api') : null
     const urlObj = new URL(req.url);
     const urlStr = urlObj.pathname;
     const domain = urlObj.hostname;
@@ -220,6 +221,73 @@ const handle = async (req) => {
                             navigator.serviceWorker.register(\`/sw.js?time=\${new Date().getTime()}\`)
                         });</script></body>
                         `)
+                    case 'img':
+                        switch (q('type')) {
+                            case 'upload':
+
+                                /*end.searchParams.set('type', 'config')
+                                end.searchParams.set('action', 'list')
+                                res = (await(await fetch(end)).json()).data
+                                */
+                                res = {
+                                    /*img: {
+                                        url: "https://www.ladydaily.com/tools/upload/agK2ocPtXgggFEZxjOpatgXRK4v913",
+                                        fieldName: "file",
+                                        cors: true
+                                    }*/
+                                    img: {
+                                        url: "https://www.ladydaily.com/tools/upload/agK2ocPtXgggFEZxjOpatgXRK4v913",
+                                        fieldName: "file",
+                                        cors: true,
+                                        headers: {}
+                                    }
+                                }
+                                if (!res.img) return { ok: 0 }
+                                const uploaded_file = await req.formData()
+                                const filedata = uploaded_file.get('file')
+                                const file = new File([filedata], 'test.jpg', { type: 'image/jpeg' })
+                                const FileArrayBuffer = await file.arrayBuffer()
+
+
+
+                                end.searchParams.set('type', 'img')
+                                end.searchParams.set('action', 'upload')
+                                res = ((await (await fetch(end.href, {
+                                    method: 'POST',
+                                    body: arraybuffer_to_base64(FileArrayBuffer)
+                                })).json()).data)
+                                return new Response(JSON.stringify(
+                                    {
+                                        "msg": "",
+                                        "code": 0,
+                                        "data": {
+                                            "errFiles": [],
+                                            "succMap": {
+                                                "图片.jpg": res
+                                            }
+                                        }
+                                    }
+
+                                ), {
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                            //}
+
+                            /* return fetch(res.img.url, {
+                                 method: 'POST',
+                                 body: await req.formData(),
+                                 headers: {
+                                     ...res.img.headers,
+                                     'Content-Type': 'multipart/form-data'
+                                 }
+                             }).then(async res => {
+                                 console.log(await res.clone().text())
+                                 return res
+                             })*/
+
+                        }
                     case 'logout':
                         await db.write('token', '')
                         return Response.redirect('/dash')
@@ -594,7 +662,7 @@ const handle = async (req) => {
                     case 'check':
 
 
-                        end = new URL(info.dev?"http://":"https://"+ q('endpoint') + '/api')
+                        end = new URL((info.dev ? "http://" : "https://") + q('endpoint') + '/api')
                         end.searchParams.set('type', 'info')
                         res = await (await fetch(end)).json()
                         if (!res || !res.ok) return Response.redirect('/dash?page=signin&type=endpoint&error=1')
@@ -814,4 +882,14 @@ const lfetch = async (urls, init) => {
                 })
         })
     }))
+}
+
+const arraybuffer_to_base64 = (buffer) => {
+    let binary = '';
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
 }
