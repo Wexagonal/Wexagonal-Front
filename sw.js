@@ -3,7 +3,9 @@ let cachelist = [];
 const info = {
     version: "0.0.1-beta-2",
     dev: 1,
-    domain: "localhost"
+    domain: "wexa.215213344.xyz",
+    endstatic:"wexa.215213344.xyz",
+    https:1
 }
 const CACHE_NAME = 'Wexagonal';
 self.addEventListener('install', async function (installEvent) {
@@ -69,6 +71,7 @@ const endget = async (path) => {
     if (info.dev) {
         end = [
             'http://localhost:9102' + path,
+            'https://'+info.endstatic+path
         ]
     } else {
         end = [
@@ -100,6 +103,7 @@ const endstatic = async (path) => {
     if (info.dev) {
         end = [
             'http://localhost:9102' + path,
+            'https://'+info.endstatic+path
         ]
     } else {
         end = [
@@ -148,7 +152,7 @@ const endnpm = async (path) => {
 }
 const handle = async (req) => {
     self.end = await db.read('endpoint')
-    self.end = self.end ? new URL((info.dev ? 'http://' : "https://") + self.end + '/api') : null
+    self.end = self.end ? new URL((info.https ? 'https://' : "http://") + self.end + '/api') : null
     const urlObj = new URL(req.url);
     const urlStr = urlObj.pathname;
     const domain = urlObj.hostname;
@@ -243,29 +247,19 @@ const handle = async (req) => {
                                     }
                                 }
                                 if (!res.img) return { ok: 0 }
-                                const uploaded_file = await req.formData()
-                                const filedata = uploaded_file.get('file')
-                                const file = new File([filedata], 'test.jpg', { type: 'image/jpeg' })
-                                const FileArrayBuffer = await file.arrayBuffer()
-
+                                const uploaded_file = await req.text()
 
 
                                 end.searchParams.set('type', 'img')
                                 end.searchParams.set('action', 'upload')
                                 res = ((await (await fetch(end.href, {
                                     method: 'POST',
-                                    body: arraybuffer_to_base64(FileArrayBuffer)
+                                    body: uploaded_file
                                 })).json()).data)
                                 return new Response(JSON.stringify(
                                     {
-                                        "msg": "",
-                                        "code": 0,
-                                        "data": {
-                                            "errFiles": [],
-                                            "succMap": {
-                                                "图片.jpg": res
-                                            }
-                                        }
+                                        ok:1,
+                                        data:res
                                     }
 
                                 ), {
@@ -662,7 +656,7 @@ const handle = async (req) => {
                     case 'check':
 
 
-                        end = new URL((info.dev ? "http://" : "https://") + q('endpoint') + '/api')
+                        end = new URL((info.https ? "https://" : "http://") + q('endpoint') + '/api')
                         end.searchParams.set('type', 'info')
                         res = await (await fetch(end)).json()
                         if (!res || !res.ok) return Response.redirect('/dash?page=signin&type=endpoint&error=1')
@@ -882,14 +876,4 @@ const lfetch = async (urls, init) => {
                 })
         })
     }))
-}
-
-const arraybuffer_to_base64 = (buffer) => {
-    let binary = '';
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
 }

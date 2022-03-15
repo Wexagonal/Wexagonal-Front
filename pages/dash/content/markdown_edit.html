@@ -1,3 +1,5 @@
+<script src="//NPM_CDN/eruda"></script>
+<script>eruda.init();</script>
 <link rel="stylesheet" href="https://NPM_CDN/vditor@3.8.12/dist/index.css" />
 <script src="https://NPM_CDN/vditor@3.8.12/dist/index.min.js"></script>
 <script src="https://NPM_CDN/js-base64@3.7.2/base64.js"></script>
@@ -26,18 +28,39 @@
         WGoto(url.href)
     }
     addEventListener('load', async () => {
+        window.file_to_base64 = (file) => {
+            //base64 encode
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = () => {
+                    resolve(reader.result.split(',')[1])
+                }
+                reader.onerror = error => {
+                    reject(error)
+                }
+            })
+        }
         window.ed = new Vditor('editor', {
             cache: {
                 enable: false
 
             },
             cdn: "https://npm.elemecdn.com/vditor@3.8.12",
-            toolbar: ["headings", 'bold', "italic", "strike", '|', 'edit-mode', 'fullscreen'],
+            toolbar: ["headings", 'bold', "italic", "strike", '|', 'edit-mode', 'fullscreen', '|', 'upload'],
 
             value: 'loading...',
-            upload:{
-                url: '/dash?page=api&action=img&type=upload',
-                fieldName:"file"
+            upload: {
+                handler: async function (file) {
+                    const upf = await file_to_base64(file[0])
+                    say.i('uploading...')
+                    ed.insertValue(`![](${(await (await fetch('/dash?page=api&action=img&type=upload', {
+                        method: 'POST',
+                        body: upf
+                    })).json()).data})`)
+                    say.s('uploaded')
+                    return 'Upload Success'
+                }
 
             },
             after() {
