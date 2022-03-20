@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div class="card card-plain mt-8">
+                <div class="card-header pb-0 text-left bg-transparent">
+                    <h3 class="font-weight-bolder text-info text-gradient">选择图床的类型</h3>
+                    <p class="mb-0">支持HTTP/S3存储
+                    </p>
+                </div>
+                <div class="card-body">
+                    <form role="form">
+                        <select id="imghost" class="form-control" placeholder="图床类型选择" aria-label="imghost"
+                            aria-describedby="imghostlist" list="imghostlist">
+                            <datalist id=imghostlist">
+                                <option value="smms">SM.MS图床</option>
+                                <option value="ladydaily">LadyDaily图床</option>
+                                <option value="http">自定义图床(HTTP)</option>
+                            </datalist>
+                        </select>
+                        <p class="mb-0" id="info"></p>
+                        <div class="text-center">
+                            <button type="button" onclick="login()"
+                                class="btn bg-gradient-info w-100 mt-4 mb-0">确定</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+                    style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.url = new URL(window.location.href);
+    window.login = () => {
+        url.searchParams.set('pf', document.getElementById('imghost').value);
+        //step set
+        url.searchParams.set('step', 'set');
+        WGoto(url.href);
+    }
+
+</script>

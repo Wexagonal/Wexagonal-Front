@@ -4,8 +4,8 @@ const info = {
     version: "0.0.1-beta-2",
     dev: 1,
     domain: "wexa.215213344.xyz",
-    endstatic:"wexa.215213344.xyz",
-    https:1
+    endstatic: "wexa.215213344.xyz",
+    https: 1
 }
 const CACHE_NAME = 'Wexagonal';
 self.addEventListener('install', async function (installEvent) {
@@ -71,7 +71,7 @@ const endget = async (path) => {
     if (info.dev) {
         end = [
             'http://localhost:9102' + path,
-            'https://'+info.endstatic+path
+            'https://' + info.endstatic + path
         ]
     } else {
         end = [
@@ -103,7 +103,7 @@ const endstatic = async (path) => {
     if (info.dev) {
         end = [
             'http://localhost:9102' + path,
-            'https://'+info.endstatic+path
+            'https://' + info.endstatic + path
         ]
     } else {
         end = [
@@ -229,58 +229,70 @@ const handle = async (req) => {
                         switch (q('type')) {
                             case 'upload':
 
-                                /*end.searchParams.set('type', 'config')
-                                end.searchParams.set('action', 'list')
-                                res = (await(await fetch(end)).json()).data
-                                */
-                                res = {
-                                    /*img: {
-                                        url: "https://www.ladydaily.com/tools/upload/agK2ocPtXgggFEZxjOpatgXRK4v913",
-                                        fieldName: "file",
-                                        cors: true
-                                    }*/
-                                    img: {
-                                        url: "https://www.ladydaily.com/tools/upload/agK2ocPtXgggFEZxjOpatgXRK4v913",
-                                        fieldName: "file",
-                                        cors: true,
-                                        headers: {}
-                                    }
-                                }
-                                if (!res.img) return { ok: 0 }
-                                const uploaded_file = await req.text()
-
-
                                 end.searchParams.set('type', 'img')
-                                end.searchParams.set('action', 'upload')
-                                res = ((await (await fetch(end.href, {
-                                    method: 'POST',
-                                    body: uploaded_file
-                                })).json()).data)
-                                return new Response(JSON.stringify(
-                                    {
-                                        ok:1,
-                                        data:res
-                                    }
+                                end.searchParams.set('action', 'config')
+                                res = ((await (await fetch(end)).json()))
 
-                                ), {
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
-                            //}
+                                if (!res.ok) return { ok: 0 }
+                                res = res.data
+                                if (res.proxy) {
+                                    const uploaded_file = await req.text()
+                                    end.searchParams.set('type', 'img')
+                                    end.searchParams.set('action', 'upload')
+                                    res = ((await (await fetch(end.href, {
+                                        method: 'POST',
+                                        body: uploaded_file
+                                    })).json()).data)
+                                    return new Response(JSON.stringify(
+                                        {
+                                            ok: 1,
+                                            data: res
+                                        }
 
-                            /* return fetch(res.img.url, {
-                                 method: 'POST',
-                                 body: await req.formData(),
-                                 headers: {
-                                     ...res.img.headers,
-                                     'Content-Type': 'multipart/form-data'
-                                 }
-                             }).then(async res => {
-                                 console.log(await res.clone().text())
-                                 return res
-                             })*/
+                                    ), {
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    })
+                                } else {
+                                    const formData = new FormData()
+                                    formData.append(imgConfig.fieldName, Base64toBlob(req.body), `${new Date().getTime()}.jpg`)
+                                    return gres({
+                                        ok: 1,
+                                        data: await (async () => {
+                                            const download_res = await (await fetch(imgConfig.url, {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: {
+                                                    ...imgConfig.headers
+                                                }
+                                            })).json()
+                                            console.log(download_res)
+                                            for (var q in imgConfig.path) {
 
+                                                const path_list = imgConfig.path[q].split('.')
+
+                                                const returnner = (array, path_list) => {
+                                                    if (path_list.length == 0) return array
+                                                    const path = path_list.shift()
+                                                    if (!array[path]) return ''
+                                                    return returnner(array[path], path_list)
+                                                }
+                                                const returnres = returnner(download_res, path_list)
+                                                if (returnres == '') continue
+                                                if (!!imgConfig.beautify) return imgConfig.beautify.replace(/\$\{\}/g, returnres)
+                                                return returnres
+                                            }
+                                            return 'ERROR,the path is not correct'
+                                        })()
+                                    })
+
+                                }
+                            case 'delete':
+                                end.searchParams.set('type', 'img')
+                                end.searchParams.set('action', 'delete')
+                                end.searchParams.set('url', q('url'))
+                                return fetch(end)
                         }
                     case 'logout':
                         await db.write('token', '')
@@ -298,6 +310,29 @@ const handle = async (req) => {
             case 'dash':
                 end.searchParams.set('token', await db.read('token'))
                 switch (q('type')) {
+                    case 'img':
+                        end.searchParams.set('type', 'img')
+                        end.searchParams.set('action', 'list')
+                        res = ((await (await fetch(end)).json()))
+                        if (!res.ok) return Response.redirect(`/dash?page=login&error=1`)
+                        res = res.data
+                        return endbuild((await endget('/pages/dash/main.html'))
+                            .replace('<!--content-->', await endget('/pages/dash/content/img.html'))
+                            .replace('<!--API_IMG_LIST-->', (() => {
+                                let imglisthtml = ''
+                                for (var i in res.data) {
+                                    imglisthtml += `
+                                    <a class="gallery-item"
+                                        data-src="${res.data[i].url}"
+                                        data-sub-html="<h4>${res.data[i].url.split('/').pop()}</h4> <p>在${new Date(res.data[i].time).toLocaleString()}上传</p>"
+                                        >
+                                    <img class="img-fluid" data-src="${res.data[i].url}" src="https://npm.elemecdn.com/chenyfan-oss@1.0.0/pic/lazy.gif"></a>`
+                                }
+                                return imglisthtml
+                            })())
+                            .replace('<!--API_LIST_COUNT-->',Object.keys(res.data).length)
+                        )
+
                     case 'file':
                         if (!q('path')) return Response.redirect('/dash?page=dash&type=file&path=/')
                         if (q('action') === 'edit') {
@@ -463,17 +498,6 @@ const handle = async (req) => {
 
 
                     case 'hexo':
-                        /*
-                        end.searchParams.set('type', 'hexo')
-                        end.searchParams.set('action', 'count')
-                        end.searchParams.set('gettype', 'post')
-                        res1 = (await (await fetch(end)).json())
-                        end.searchParams.set('gettype', 'draft')
-                        res2 = (await (await fetch(end)).json())
-                        end.searchParams.set('action', 'getci')
-                        res3 = (await (await fetch(end)).json())
-                        end.searchParams.set('type', 'info')
-                        res4 = (await (await fetch(end)).json())*/
                         [res1, res2, res3, res4, res5] = await Promise.all([
                             new Promise((resolve, reject) => {
                                 end.searchParams.set('type', 'hexo')
@@ -612,7 +636,6 @@ const handle = async (req) => {
                                         return endbuild((await endget('/pages/dash/main.html'))
                                             .replace('<!--content-->', await endget('/pages/dash/content/post_list.html'))
                                             .replace('<!--API_LIST_BODY-->', (() => {
-                                                //res.data为list包含所有文件名,建立table,两个列,第一个为list中所有数据
                                                 let table = ''
                                                 for (let i = 0; i < res.data.length; i++) {
                                                     table += `<tr><td><a href="/dash?page=dash&type=edit&action=edit&gettype=draft&name=${res.data[i]}">${res.data[i]}</a></td><td><a href="javascript:to_post('${res.data[i]}')">转为文章</a></td></tr>`
@@ -676,6 +699,24 @@ const handle = async (req) => {
                         return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/index.html')))
                     case 'signup':
                         return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/type/signup.html')))
+                    case 'config_img':
+                        switch (q('step')) {
+                            case 'new':
+                                return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/type/img/index.html')))
+                            case 'set':
+                                switch (q('pf')) {
+                                    case 'smms':
+                                        return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/type/img/quick/smms.html')))
+                                    case 'ladydaily':
+                                        return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/type/img/quick/ladydaily.html')))
+                                    case 'http':
+                                        return endbuild((await endget('/pages/signin/main.html')).replace('<!--SIGNIN_CONTENT-->', await endget('/pages/signin/content/install/type/img/detail/http.html')))
+                                }
+                            case 'index':
+                                return Response.redirect('/dash?page=install&type=config_img&step=new')
+                            default:
+                                return Response.redirect('/dash?page=install&type=config_img&step=index')
+                        }
 
                     case 'bind_hexo':
                         end.searchParams.set('type', 'test')
@@ -876,4 +917,19 @@ const lfetch = async (urls, init) => {
                 })
         })
     }))
+}
+
+
+
+
+//Function
+
+const Base64toBlob = (base64_data) => {
+    const byteString = atob(base64_data);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const intArray = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+        intArray[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([intArray], { type: 'image/png' });
 }

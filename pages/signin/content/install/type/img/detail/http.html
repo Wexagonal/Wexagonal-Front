@@ -1,0 +1,118 @@
+<div class="container">
+    <div class="row">
+        <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div class="card card-plain mt-8">
+                <div class="card-header pb-0 text-left bg-transparent">
+                    <h3 class="font-weight-bolder text-info text-gradient">输入HTTP接口的详细信息</h3>
+                    <p class="mb-0">仔细填写下列输入</p>
+                </div>
+                <div class="card-body">
+                    <form role="form">
+                        <label>HTTP终端URL</label>
+                        <div class="mb-3">
+                            <input id="url" type="text" class="form-control"
+                                placeholder="https://xxx.xxx.xxx/upload?token=xxxxx" aria-label="URL"
+                                aria-describedby="URL-addon">
+                        </div>
+                        <label>FormData字段名</label>
+                        <div class="mb-3">
+                            <input id="fieldname" type="text" class="form-control" placeholder="file"
+                                aria-label="fieldName" aria-describedby="fieldName-addon">
+                        </div>
+                        <label>自定义Headers</label>
+                        <div class="mb-3">
+                            <textarea id="headers" class="form-control" placeholder="{'Authorization': 'xxxxxx'}"
+                                aria-label="headers" aria-describedby="headers-addon"></textarea>
+                        </div>
+
+                        <label>返回URL数据格式</label>
+                        <div class="mb-3">
+                            <textarea id="path" class="form-control" placeholder='["url"]' aria-label="path"
+                                aria-describedby="path-addon"></textarea>
+                        </div>
+
+                        <label>URL返回处理[可选]</label>
+                        <div class="mb-3">
+                            <input id="beauty" type="text" class="form-control"
+                                placeholder="https://IMAGE_PROXY/?url=${}" aria-label="beauty"
+                                aria-describedby="beauty-addon">
+                            <span class="text-info">${}为返回URL</span>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="proxy" checked="false">
+                            <label class="form-check-label">使用WexagonalBackend中继流量,避免前端出现CORS限制</label>
+
+                            <span class="text-danger" id="info"></span>
+                        </div>
+
+
+                        <div class="text-center">
+                            <button type="button" onclick="login()"
+                                class="btn bg-gradient-info w-100 mt-4 mb-0">确定</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
+                    style="background-image:url('https://SOURCE_CDN/assets/img/curved-images/curved6.jpg')"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.url = new URL(window.location.href);
+    const show_info = () => {
+        if (document.getElementById('proxy').checked) {
+            document.getElementById('info').innerHTML = '<span class="text-danger">警告:部分无服务器函数平台可能没有足够的算力解码中继,请酌情开启</span>';
+        } else {
+            document.getElementById('info').innerHTML = '<span class="text-danger">警告:请确保此API兼容CORS和HTTPS!</span>';
+        }
+
+    }
+    show_info()
+    document.getElementById('proxy').addEventListener('change', show_info);
+    window.login = () => {
+
+        try {
+            JSON.parse(document.getElementById('headers').value || '{}');
+            JSON.parse(document.getElementById('path').value);
+        } catch (e) {
+            document.getElementById('info').innerHTML = '请检查header和path是否为正确的JSON格式!path不得为空!';
+            return;
+        }
+        try {
+            new URL(document.getElementById('url').value);
+        } catch (e) {
+            document.getElementById('info').innerHTML = '请检查URL是否正确!';
+            return;
+        }
+        if (JSON.parse(document.getElementById('path').value).length == 0) {
+            document.getElementById('info').innerHTML = 'path不得为空!';
+            return;
+        }
+        if (!document.getElementById('fieldname').value) {
+            document.getElementById('info').innerHTML = 'fieldname不得为空!';
+            return;
+        }
+
+        const data = db.read('img') || []
+        data.push(
+            {
+                url: document.getElementById('url').value,
+                fieldName: document.getElementById('fieldname').value,
+                proxy: document.getElementById('proxy').checked,
+                type: "http",
+                headers: JSON.parse(document.getElementById('headers').value || '{}'),
+                path: JSON.parse(document.getElementById('path').value),
+                beautify: document.getElementById('beauty').value.match(/\${}/) ? document.getElementById('beauty').value : null
+            }
+        )
+        db.write('img', data);
+        window.location.href = '/dash?page=install'
+    }
+</script>

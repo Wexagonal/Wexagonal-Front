@@ -27,10 +27,10 @@
                                 class="btn bg-gradient-danger w-100 mt-4 mb-0">开始配置编辑器</button>
                         </div>
                         </br>
-                        <label>图床配置[不可用]</label>
+                        <label>图床配置[可选]</label>
                         <div class="text-center">
-                            <button type="button" id="config_pichost_button" disabled
-                                class="btn bg-gradient-danger w-100 mt-4 mb-0">开始绑定配置图床</button>
+                            <button type="button" id="config_img_button"
+                                class="btn bg-gradient-info w-100 mt-4 mb-0">开始绑定配置图床</button>
                         </div>
 
                         <button type="button" id="finish_button"
@@ -67,8 +67,8 @@
         if (!!db.read('editor')) {
             document.getElementById('config_editor_button').innerText = "重新配置编辑器"
         }
-        if (!!db.read('pichost')) {
-            document.getElementById('config_pichost_button').innerText = "重新绑定配置图床"
+        if (!!db.read('img')) {
+            document.getElementById('config_img_button').innerText = "重新绑定配置图床"
         }
         document.getElementById('bind_hexo_button').addEventListener('click', () => {
             url.searchParams.set('type', 'bind_hexo')
@@ -78,8 +78,8 @@
             url.searchParams.set('type', 'config_editor')
             WGoto(url.href)
         })
-        document.getElementById('config_pichost_button').addEventListener('click', () => {
-            url.searchParams.set('type', 'config_pichost')
+        document.getElementById('config_img_button').addEventListener('click', () => {
+            url.searchParams.set('type', 'config_img')
             WGoto(url.href)
         })
         document.getElementById('config_basic_button').addEventListener('click', () => {
