@@ -3,9 +3,6 @@
 <script src="https://NPM_CDN/js-base64@3.7.2/base64.js"></script>
 <div class="row">
     <div class="col-12">
-
-
-
         <div class="card-body px-0 pt-0 pb-2">
             <div class="card mb-4" id="editor">
             </div>
@@ -21,13 +18,13 @@
     window.url = new URL(window.location.href);
     window.path = url.searchParams.get('name')
     if (path.indexOf('//') != -1) {
+        console.log(path)
         path = path.replace(/\/\//g, '/')
         url.searchParams.set('name', path)
-        WGoto(url.href)
+        //WGoto(url.href)
     }
     addEventListener('load', async () => {
         window.file_to_base64 = (file) => {
-            //base64 encode
             return new Promise((resolve, reject) => {
                 const reader = new FileReader()
                 reader.readAsDataURL(file)
@@ -64,7 +61,6 @@
             after() {
                 (async () => {
                     if (window.localStorage.getItem('EDIT_' + url.searchParams.get('name'))) {
-
                         document.getElementById('info').innerHTML = '<p onclick="clearcache()">从本地缓存中加载到最新版本!点我以清除缓存!</p>'
                         setTimeout(() => {
                             ed.setValue(window.localStorage.getItem('EDIT_' + url.searchParams.get('name')))
@@ -74,29 +70,21 @@
                     } else {
                         document.getElementById('info').innerText = '正在从云端加载文件...'
                         ed.setValue(await (async () => {
-
                             say.i('尝试从服务器加载文件...')
-                            let res = await fetch(new URL('/dash?page=api&action=edit&type=download&path=' + url.searchParams.get('name'), window.location.origin), {
-                                method: 'GET',
-                                headers: {
-                                    'Content-Type': 'application/x-www-form-urlencoded'
-                                }
-                            })
+                            let res = await fetch(new URL('/dash?page=api&action=edit&type=download&path=' + url.searchParams.get('name'), window.location.origin))
                             let data = await res.json()
-
                             setbutton()
-
                             document.getElementById('info').innerText = '已经从云端文件加载到最新版本!'
                             say.s('文件加载成功!')
-                            return data.data || `
----
-title: ${url.searchParams.get('name').split('/').pop().split('.')[0]}
-author: 
-tags:
-categories:
-date: ${new Date().toLocaleString()}
----
-            `
+                            //无文章时获得的默认模板
+                            let defaultdata = "---\n"
+                            defaultdata += `title: ${url.searchParams.get('name').split('/').pop().split('.')[0]}\n`
+                            defaultdata += `author:\n`
+                            defaultdata += `tags:\n`
+                            defaultdata += `categories:\n`
+                            defaultdata += `date: ${new Date().toLocaleString()}\n`
+                            defaultdata += `---\n`
+                            return data.data || defaultdata
                         })())
                     }
 
