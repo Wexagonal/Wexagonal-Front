@@ -18,14 +18,13 @@
 
 <script>
     window.url = new URL(window.location.href)
-    let v = document.getElementById('name').value
     window.new_post = () => {
-        url.searchParams.set('name', "source/_posts/" + v)
+        url.searchParams.set('name', "source/_posts/" + document.getElementById('name').value)
         url.searchParams.set('action', 'edit')
         WGoto(url.href)
     }
     window.new_draft = () => {
-        url.searchParams.set('name', "source/_drafts/" + v)
+        url.searchParams.set('name', "source/_drafts/" + document.getElementById('name').value)
         url.searchParams.set('action', 'edit')
         WGoto(url.href)
     }

@@ -30,8 +30,6 @@
 </div>
 <script>
   (() => {
-    //判断url searchParams中的gettype 并为button_post_list 和 button_draft_list 设置class为bg-gradient-secondary或bg-gradient-success
-    window.url = new URL(window.location.href);
     gettype = url.searchParams.get('gettype');
     document.getElementById('button_new').href = (() => {
       let url = new URL(window.location.href);
@@ -56,7 +54,6 @@
       })()
     }
     window.to_draft = async (path) => {
-      let url = new URL(window.location.href);
       url.searchParams.set('page', 'api');
       url.searchParams.set('action', 'edit');
       //type move
@@ -79,7 +76,6 @@
       }
     }
     window.to_post = async (path) => {
-      let url = new URL(window.location.href);
       url.searchParams.set('page', 'api');
       url.searchParams.set('action', 'edit');
       //type move

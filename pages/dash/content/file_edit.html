@@ -16,16 +16,12 @@
     </div>
 </div>
 <script type="text/javascript">
-    window.url = new URL(window.location.href)
     window.path = url.searchParams.get('path')
-    //判断path中是否有多个连续/,不包括一个/,如果有,则替换为一个/,如果没有,则不替换
     if (path.indexOf('//') != -1) {
         path = path.replace(/\/+/g, '/')
         url.searchParams.set('path', path)
         WGoto(url.href)
     }
-    //文件后缀
-    window.ext = path.split('.').pop()
     var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
         theme: "material",
@@ -39,7 +35,6 @@
         }
     }).then(res => res.json()).then(res => {
         editor.setValue(res.data)
-
         setbutton()
     })
 
