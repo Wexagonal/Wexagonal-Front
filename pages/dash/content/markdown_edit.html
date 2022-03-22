@@ -21,7 +21,7 @@
         console.log(path)
         path = path.replace(/\/\//g, '/')
         url.searchParams.set('name', path)
-        //WGoto(url.href)
+        WGoto(url.href)
     }
     addEventListener('load', async () => {
         window.file_to_base64 = (file) => {

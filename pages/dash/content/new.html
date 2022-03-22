@@ -17,16 +17,9 @@
 </div>
 
 <script>
-
-    const checkmd = (name) => {
-        const back = name.split('.')
-        return back[back.length - 1] === 'md' ? 1 : 0
-    }
     window.url = new URL(window.location.href)
     let v = document.getElementById('name').value
-    v += checkmd(v) ? "" : ".md"
     window.new_post = () => {
-
         url.searchParams.set('name', "source/_posts/" + v)
         url.searchParams.set('action', 'edit')
         WGoto(url.href)
