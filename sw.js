@@ -321,12 +321,29 @@ const handle = async (req) => {
                             .replace('<!--API_IMG_LIST-->', (() => {
                                 let imglisthtml = ''
                                 for (var i in res.data) {
-                                    imglisthtml += `
-                                    <a class="gallery-item"
-                                        data-src="${res.data[i].url}"
-                                        data-sub-html="<h4>${res.data[i].url.split('/').pop()}</h4> <p>在${new Date(res.data[i].time).toLocaleString()}上传</p>"
-                                        >
-                                    <img class="img-fluid" data-src="${res.data[i].url}" src="https://npm.elemecdn.com/chenyfan-oss@1.0.0/pic/lazy.gif"></a>`
+                                    imglisthtml +=
+                                    `
+                                    <div class="col-lg-4 col-md-12" data-src="${res.data[i].url}"
+                                    data-sub-html="<h4>${res.data[i].url.split('/').pop()}</h4> <p>在${new Date(res.data[i].time).toLocaleString()}上传</p>">
+                                        <div class="card shadow-lg mb-4">
+                                            <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
+                                                <div class="d-block">
+                                                    <img src="https://npm.elemecdn.com/chenyfan-oss@1.0.0/pic/lazy.gif" data-src="${res.data[i].url}"
+                                                        alt="alt-article-15" class="img-fluid shadow rounded-3">
+                                                </div>
+                                            </div>
+                                            <div class="card-body min-height-200 d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h6>${res.data[i].url.split('/').pop()}</h6>
+                                                    <p class="text-secondary text-sm mb-0 min-height-50">在${new Date(res.data[i].time).toLocaleString()}上传</p>
+                                                </div>
+                                                <a href="javascript:globalcopy('${res.data[i].url}')" class="mt-2 mb-0">复制网址</a>
+                                                <a href="javascript:globaldelete('${res.data[i].url}')" class="mt-2 mb-0">删除此图片</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    `
                                 }
                                 return imglisthtml
                             })())

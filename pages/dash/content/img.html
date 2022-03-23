@@ -7,12 +7,35 @@
             <div class="header d-flex flex-column align-items-center">
                 <h1 class="display-6 mt-3 mb-0">ImageHostHistory</h1>
                 <p class="lead mt-2 mb-4">
-                   在这里存储了所有的通过Wexagonal上传的图片内容<br>
-                   统计:<!--API_LIST_COUNT-->张
+                    在这里存储了所有的通过Wexagonal上传的图片内容<br>
+                    统计:
+                    <!--API_LIST_COUNT-->张
                 </p>
+                <!--上传图片按钮-->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="upload_img">上传图片</label>
+                                            <input type="file" class="form-control-file" id="uploadfile">
+                                            <button class="btn btn-primary mt-2" onclick="globalupload()">上传</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="gallery-container d-flex align-items-center justify-content-center" style="display: flex;flex-flow: wrap;" id="gallery-container">
-                <!--API_IMG_LIST-->
+            <div class="container-fluid">
+                <div class="row mt-6" id="gallery-container">
+                    <!--API_IMG_LIST-->
+
+                </div>
             </div>
         </div>
 
@@ -36,17 +59,6 @@
         speed: 500,
         plugins: [lgZoom]
     });
-    const toolbar = document.getElementById('lg-toolbar-1')
-    toolbar.innerHTML += `
-    <button class="lg-icon" onclick="globaldelete(getCurrentUrl())">
-        <i class="fa fa-trash-alt"></i>
-    </button>
-    <button class="lg-icon" onclick="globalcopy(getCurrentUrl())">
-        <i class="fa fa-copy"></i>
-    </button>`
-    const getCurrentUrl=()=> {
-        return document.querySelector('.lg-object').getAttribute('src');
-    }
     const globalcopy = (url) => {
         const input = document.createElement('input');
         input.value = url;
@@ -58,52 +70,85 @@
     }
     const globaldelete = (url) => {
         say.i(`尝试删除图片${url}`)
-            fetch(`/?page=api&action=img&type=delete&url=${url}`).then(res=>res.json()).then(res => {
-                if (res.ok) {
-                    say.s(`已删除:${url}`)
-                    setTimeout(() => {
-                        location.reload()
-                    }, 2000);
-                } else {
-                    say.e(`删除失败:${url}`)
+        fetch(`/?page=api&action=img&type=delete&url=${url}`).then(res => res.json()).then(res => {
+            if (res.ok) {
+                say.s(`已删除:${url}`)
+                setTimeout(() => {
+                    location.reload()
+                }, 2000);
+            } else {
+                say.e(`删除失败:${url}`)
+            }
+        })
+    }
+    window.file_to_base64 = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = () => {
+                    resolve(reader.result.split(',')[1])
+                }
+                reader.onerror = error => {
+                    reject(error)
                 }
             })
+        }
+    const globalupload = async ()=>{
+        const file = document.getElementById('uploadfile').files[0];
+        if(!file){
+            say.e('请选择文件')
+            return
+        }
+        say.i(`尝试上传文件${file.name}`)
+        fetch('/?page=api&action=img&type=upload', {
+            method: 'POST',
+            body: await file_to_base64(file)
+        }).then(res => res.json()).then(res => {
+            if (res.ok) {
+                say.s(`已上传:${res.url}`)
+                setTimeout(() => {
+                    location.reload()
+                }, 2000);
+            } else {
+                say.e(`上传失败:${res.url}`)
+            }
+        })
     }
 </script>
 
 <script>
     const imgs = document.getElementsByTagName("img");
     const viewHeight =
-      window.innerHeight || document.documentElement.clientHeight;
+        window.innerHeight || document.documentElement.clientHeight;
     let num = 0;
-  
+
     function lazyload() {
-      for (let i = num; i < imgs.length; i++) {
-        // 用可视区域高度减去元素顶部距离可视区域顶部的高度
-        let distance = viewHeight - imgs[i].getBoundingClientRect().top;
-        // 如果可视区域高度大于等于元素顶部距离可视区域顶部的高度，说明元素露出
-        if (distance >= 0) {
-          // 给元素写入真实的src，展示图片
-          imgs[i].src = imgs[i].getAttribute("data-src");
-          // 前i张图片已经加载完毕，下次从第i+1张开始检查是否露出
-          num = i + 1;
+        for (let i = num; i < imgs.length; i++) {
+            // 用可视区域高度减去元素顶部距离可视区域顶部的高度
+            let distance = viewHeight - imgs[i].getBoundingClientRect().top;
+            // 如果可视区域高度大于等于元素顶部距离可视区域顶部的高度，说明元素露出
+            if (distance >= 0) {
+                // 给元素写入真实的src，展示图片
+                imgs[i].src = imgs[i].getAttribute("data-src");
+                // 前i张图片已经加载完毕，下次从第i+1张开始检查是否露出
+                num = i + 1;
+            }
         }
-      }
     }
-  
+
     // 防抖函数
     function debounce(fn, delay = 500) {
-      let timer = null;
-      return function (...args) {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          fn.call(this, args);
-        }, delay);
-      };
+        let timer = null;
+        return function (...args) {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+                fn.call(this, args);
+            }, delay);
+        };
     }
-  
+
     // 是的页面初始化是加载首屏图片
     window.onload = lazyload;
     // 监听Scroll事件，为了防止频繁调用，使用防抖函数优化一下
     window.addEventListener("scroll", debounce(lazyload, 600), false);
-  </script>
+</script>
