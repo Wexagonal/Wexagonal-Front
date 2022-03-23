@@ -11,7 +11,6 @@
                     统计:
                     <!--API_LIST_COUNT-->张
                 </p>
-                <!--上传图片按钮-->
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -20,7 +19,7 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label for="upload_img">上传图片</label>
-                                            <input type="file" class="form-control-file" id="uploadfile">
+                                            <input type="file" class="form-control-file " id="uploadfile">
                                             <button class="btn btn-primary mt-2" onclick="globalupload()">上传</button>
                                         </div>
                                     </div>
@@ -54,11 +53,13 @@
     }
 </style>
 <script>
-    const container = document.getElementById("gallery-container");
-    lightGallery(container, {
-        speed: 500,
-        plugins: [lgZoom]
-    });
+    const containers = document.getElementsByName('img_container')
+    containers.forEach(container => {
+        lightGallery(container, {
+            speed: 500,
+            plugins: [lgZoom]
+        });
+    })
     const globalcopy = (url) => {
         const input = document.createElement('input');
         input.value = url;
@@ -82,20 +83,20 @@
         })
     }
     window.file_to_base64 = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader()
-                reader.readAsDataURL(file)
-                reader.onload = () => {
-                    resolve(reader.result.split(',')[1])
-                }
-                reader.onerror = error => {
-                    reject(error)
-                }
-            })
-        }
-    const globalupload = async ()=>{
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => {
+                resolve(reader.result.split(',')[1])
+            }
+            reader.onerror = error => {
+                reject(error)
+            }
+        })
+    }
+    const globalupload = async () => {
         const file = document.getElementById('uploadfile').files[0];
-        if(!file){
+        if (!file) {
             say.e('请选择文件')
             return
         }
@@ -105,12 +106,12 @@
             body: await file_to_base64(file)
         }).then(res => res.json()).then(res => {
             if (res.ok) {
-                say.s(`已上传:${res.url}`)
+                say.s(`已上传:${file.name}`)
                 setTimeout(() => {
                     location.reload()
                 }, 2000);
             } else {
-                say.e(`上传失败:${res.url}`)
+                say.e(`上传失败:${file.name}`)
             }
         })
     }
@@ -150,5 +151,5 @@
     // 是的页面初始化是加载首屏图片
     window.onload = lazyload;
     // 监听Scroll事件，为了防止频繁调用，使用防抖函数优化一下
-    window.addEventListener("scroll", debounce(lazyload, 600), false);
+    window.addEventListener("scroll", debounce(lazyload, 50), false);
 </script>

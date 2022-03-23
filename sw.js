@@ -322,12 +322,12 @@ const handle = async (req) => {
                                 let imglisthtml = ''
                                 for (var i in res.data) {
                                     imglisthtml +=
-                                    `
-                                    <div class="col-lg-4 col-md-12" data-src="${res.data[i].url}"
-                                    data-sub-html="<h4>${res.data[i].url.split('/').pop()}</h4> <p>在${new Date(res.data[i].time).toLocaleString()}上传</p>">
-                                        <div class="card shadow-lg mb-4">
-                                            <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1">
-                                                <div class="d-block">
+                                        `
+                                    <div class="col-lg-4 col-md-12" >
+                                        <div class="card shadow-lg mb-4" >
+                                            <div class="card-header p-0 mx-3 mt-3 position-relative z-index-1" name="img_container">
+                                                <div class="d-block" data-src="${res.data[i].url}"
+                                                data-sub-html="<h4>${res.data[i].url.split('/').pop()}</h4> <p>在${new Date(res.data[i].time).toLocaleString()}上传</p>">
                                                     <img src="https://npm.elemecdn.com/chenyfan-oss@1.0.0/pic/lazy.gif" data-src="${res.data[i].url}"
                                                         alt="alt-article-15" class="img-fluid shadow rounded-3">
                                                 </div>
@@ -337,8 +337,10 @@ const handle = async (req) => {
                                                     <h6>${res.data[i].url.split('/').pop()}</h6>
                                                     <p class="text-secondary text-sm mb-0 min-height-50">在${new Date(res.data[i].time).toLocaleString()}上传</p>
                                                 </div>
-                                                <a href="javascript:globalcopy('${res.data[i].url}')" class="mt-2 mb-0">复制网址</a>
-                                                <a href="javascript:globaldelete('${res.data[i].url}')" class="mt-2 mb-0">删除此图片</a>
+                                                <div class="d-flex justify-content-between">
+                                                <a href="javascript:globalcopy('${res.data[i].url}')"><svg t="1648008616118" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2252" width="24" height="24"><path d="M720 192h-544A80.096 80.096 0 0 0 96 272v608C96 924.128 131.904 960 176 960h544c44.128 0 80-35.872 80-80v-608C800 227.904 764.128 192 720 192z m16 688c0 8.8-7.2 16-16 16h-544a16 16 0 0 1-16-16v-608a16 16 0 0 1 16-16h544a16 16 0 0 1 16 16v608z" p-id="2253"></path><path d="M848 64h-544a32 32 0 0 0 0 64h544a16 16 0 0 1 16 16v608a32 32 0 1 0 64 0v-608C928 99.904 892.128 64 848 64z" p-id="2254"></path><path d="M608 360H288a32 32 0 0 0 0 64h320a32 32 0 1 0 0-64zM608 520H288a32 32 0 1 0 0 64h320a32 32 0 1 0 0-64zM480 678.656H288a32 32 0 1 0 0 64h192a32 32 0 1 0 0-64z" p-id="2255"></path></svg>复制网址</a>
+                                                <a href="javascript:globaldelete('${res.data[i].url}')" style="color:#d81e06"><svg t="1648008650160" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3154" width="24" height="24"><path d="M909.050991 169.476903l-217.554898 0 0-31.346939c0-39.5866-32.205493-71.792093-71.793116-71.792093L408.15591 66.337871c-39.5866 0-71.792093 32.205493-71.792093 71.792093l0 31.346939L113.349581 169.476903c-11.013845 0-19.942191 8.940626-19.942191 19.954471s8.928347 19.954471 19.942191 19.954471l84.264149 0 0 640.687918c0 60.479443 49.203632 109.683075 109.683075 109.683075l416.474366 0c60.479443 0 109.683075-49.203632 109.683075-109.683075L833.454246 209.385844l75.595722 0c11.012821 0 19.942191-8.940626 19.942191-19.954471S920.063813 169.476903 909.050991 169.476903zM376.2482 138.130987c0-17.593703 14.314007-31.907711 31.907711-31.907711l211.547067 0c17.593703 0 31.907711 14.314007 31.907711 31.907711l0 31.346939L376.2482 169.477926 376.2482 138.130987zM793.569864 850.074785c0 38.486546-31.312146 69.798692-69.798692 69.798692L307.297828 919.873478c-38.486546 0-69.798692-31.312146-69.798692-69.798692L237.499136 211.042577l556.070728 0L793.569864 850.074785z" p-id="3155" fill="#d81e06"></path><path d="M510.662539 861.276918c11.012821 0 19.954471-8.92937 19.954471-19.942191L530.61701 294.912753c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191L490.708068 841.334727C490.708068 852.347548 499.649717 861.276918 510.662539 861.276918z" p-id="3156" fill="#d81e06"></path><path d="M374.562814 801.449321c11.012821 0 19.954471-8.92937 19.954471-19.942191L394.517285 354.74035c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191l0 426.76678C354.608344 792.519951 363.549993 801.449321 374.562814 801.449321z" p-id="3157" fill="#d81e06"></path><path d="M649.832182 801.449321c11.012821 0 19.954471-8.92937 19.954471-19.942191L669.786653 354.74035c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191l0 426.76678C629.877711 792.519951 638.81936 801.449321 649.832182 801.449321z" p-id="3158" fill="#d81e06"></path></svg>删除图片</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -347,7 +349,7 @@ const handle = async (req) => {
                                 }
                                 return imglisthtml
                             })())
-                            .replace('<!--API_LIST_COUNT-->',Object.keys(res.data).length)
+                            .replace('<!--API_LIST_COUNT-->', Object.keys(res.data).length)
                         )
 
                     case 'file':
