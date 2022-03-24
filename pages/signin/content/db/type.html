@@ -42,7 +42,11 @@
     node:{
       mongodb: "MongoDB",
       http: "http简易数据库"
-    }
+    },
+    scf:{
+      mongodb: "MongoDB数据库",
+      http: "http简易数据库"
+    },
   }
   document.querySelector('#intro').innerHTML = `您的平台选择为${window.plat},请选择适配的数据库类型`
   document.querySelector('#chooser').innerHTML = (() => {

@@ -57,9 +57,10 @@
                 break
         }
       const generate_info = {
-          node:"在当前目录下新建 launcher.config.json 文件，并填写如上内容",
-          cfworker:"设置变量键名为CONFIG, 键值如上内容",
-          vercel:"设置变量键名为CONFIG, 键值如上内容，之后重新部署"
+          node:"关闭Wexagonal主程序,在环境中输入 export DB_CONFIG='文本框内内容' ,重启程序.",
+          cfworker:"Workers => 指定Worker => 设置 => 变量 => </br> 环境变量 => 变量名称 DB_CONFIG => 值 文本框内内容 </br> KV 命名空间绑定 => 变量名称 DB => KV命名空间 随意选择",
+          vercel:"指定应用 => settings => environment variables => NAME填入 DB_CONFIG => VALUE 文本框内内容 => Add => 重新部署应用",
+          scf:"指定应用 => 函数管理 => 函数配置 => 编辑 => 环境配置 => 环境变量 => 变量名称 DB_CONFIG => 值 文本框内内容 => Add",
       }
       document.getElementById('info').innerHTML = generate_info[plat]
     })();
