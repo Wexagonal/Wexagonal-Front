@@ -64,6 +64,10 @@
         if (!!db.read('hexo')) {
             document.getElementById('bind_hexo_button').innerText = "重新绑定Hexo"
         }
+        if (!!db.read('img')) {
+            document.getElementById('config_img_button').innerText = "重新绑定图床"
+        }
+
         if (!!db.read('editor')) {
             document.getElementById('config_editor_button').innerText = "重新配置编辑器"
         }

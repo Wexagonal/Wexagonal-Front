@@ -136,20 +136,5 @@
             }
         }
     }
-
-    // 防抖函数
-    function debounce(fn, delay = 500) {
-        let timer = null;
-        return function (...args) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(() => {
-                fn.call(this, args);
-            }, delay);
-        };
-    }
-
-    // 是的页面初始化是加载首屏图片
-    window.onload = lazyload;
-    // 监听Scroll事件，为了防止频繁调用，使用防抖函数优化一下
-    window.addEventListener("scroll", debounce(lazyload, 50), false);
+    window.addEventListener("scroll", lazyload);
 </script>
