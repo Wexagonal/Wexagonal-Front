@@ -6,7 +6,8 @@ const ignore = [
     '.git',
     'package.json',
     '.gitattributes',
-    'CNAME'
+    'CNAME',
+    'GList.js',
 ]
 const list = (path) => {
     const dir = fs.readdirSync(path);
