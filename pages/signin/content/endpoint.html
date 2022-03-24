@@ -38,7 +38,8 @@
 
     }
     window.login = () => {
-        url.searchParams.set('endpoint', document.querySelector('#endpoint').value)
+        const domain = document.querySelector('#endpoint').value.replace(/^https?:\/\//, '').split('/')[0]
+        url.searchParams.set('endpoint', domain)
         url.searchParams.set('page', 'signin')
         url.searchParams.set('type', 'check')
         WGoto(url.href)
