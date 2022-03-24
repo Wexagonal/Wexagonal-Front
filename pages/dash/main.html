@@ -9,7 +9,87 @@
   <title>
     Wexagonal - Dash
   </title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <style>
+    /* open-sans-300 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 300;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-300.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-regular */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: regular;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-600 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 600;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-600.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-700 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 700;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-700.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+  </style>
 
   <link href="https://SOURCE_CDN/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="https://SOURCE_CDN/assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -76,20 +156,19 @@
         })
       }
     }
-    
+
     window.onpageshow = function (event) {
       window.url = new URL(window.location.href);
     }
     window.url = new URL(window.location.href);
-    
+
   </script>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href="https://wexa.top"
-        target="_blank">
+      <a class="navbar-brand m-0" href="https://wexa.top" target="_blank">
         <img src="https://NPM_CDN/wexagonal_icon" class="navbar-brand-img" style="height:24px" alt="main_logo">
         <span class="ms-1 font-weight-bold">Wexagonal Backend</span>
       </a>
@@ -297,10 +376,6 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
 
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <!--<div class="input-group">
-        <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-        <input type="text" class="form-control" placeholder="Type here...">
-      </div>-->
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
@@ -352,11 +427,9 @@
             <i class="fa fa-close"></i>
           </button>
         </div>
-        <!-- End Toggle Button -->
       </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
-        <!-- Sidebar Backgrounds -->
         <div>
           <h6 class="mb-0">Sidebar Colors</h6>
         </div>
@@ -371,7 +444,6 @@
             <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
           </div>
         </a>
-        <!-- Sidenav Type -->
         <div class="mt-3">
           <h6 class="mb-0">Sidenav Type</h6>
           <p class="text-sm">Choose between 2 different sidenav types.</p>
@@ -383,7 +455,7 @@
             onclick="sidebarType(this)">White</button>
         </div>
         <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-        <!-- Navbar Fixed -->
+
         <hr class="horizontal dark my-sm-4">
         <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/soft-ui-dashboard-pro">Free
           Download</a>
@@ -406,7 +478,6 @@
       </div>
     </div>
   </div>
-  <!--   Core JS Files   -->
   <script src="https://SOURCE_CDN/assets/js/core/popper.min.js"></script>
   <script src="https://SOURCE_CDN/assets/js/core/bootstrap.min.js"></script>
   <script src="https://SOURCE_CDN/assets/js/plugins/perfect-scrollbar.min.js"></script>
@@ -442,7 +513,6 @@
             path = url.searchParams.get("path");
             pathlist = path ? path.split('/') : []
             p += '<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5" id="nav_crumb"><li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">仓库</a></li></ol>'
-            //p += '<span class="font-weight-bolder mb-0">仓库</h6>'
             if (!!path) {
               for (var i in pathlist) {
                 p += '<span class="text-primary">' + pathlist[i] + '</span>'

@@ -9,7 +9,87 @@
   <title>
     Wexagonal - Login
   </title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <style>
+    /* open-sans-300 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 300;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-300.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-300.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-regular */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: regular;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-regular.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-600 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 600;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-600.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-600.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+
+    /* open-sans-700 */
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 700;
+      src: url('//lib.baomitu.com/fonts/open-sans/open-sans-700.eot');
+      /* IE9 Compat Modes */
+      src: local('Open Sans'), local('OpenSans-Normal'),
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.woff') format('woff'),
+        /* Modern Browsers */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('//lib.baomitu.com/fonts/open-sans/open-sans-700.svg#OpenSans') format('svg');
+      /* Legacy iOS */
+    }
+  </style>
 
   <link href="https://SOURCE_CDN/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="https://SOURCE_CDN/assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -17,7 +97,7 @@
   <link href="https://SOURCE_CDN/assets/css/nucleo-svg.css" rel="stylesheet" />
   <link id="pagestyle" href="https://SOURCE_CDN/assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
   <script>
-    window.WGoto = (url)=>{
+    window.WGoto = (url) => {
       window.location.href = url
     }
   </script>
@@ -27,8 +107,7 @@
   <nav
     class="navbar navbar-expand-lg position-absolute top-0 z-index-3 w-100 shadow-none my-3  navbar-transparent mt-4">
     <div class="container">
-      <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white"
-        href="https://wexa.top">
+      <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 text-white" href="https://wexa.top">
         Wexagonal
       </a>
     </div>
@@ -54,7 +133,7 @@
               <h5>凭据登陆</h5>
               <div class="alert alert-danger" role="alert" style="display: none;" id="LOGIN_ERROR">
                 <strong>错误！</strong> 用户名或密码错误！
-                </div>
+              </div>
             </div>
             <div class="card-body">
               <form role="form text-left">
@@ -98,7 +177,7 @@
   <script src="https://SOURCE_CDN/assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script>
     const url = new URL(window.location.href)
-    if(!!url.searchParams.get('error')){
+    if (!!url.searchParams.get('error')) {
       document.getElementById('LOGIN_ERROR')['style'] = 'display:unset'
     }
     const login = () => {

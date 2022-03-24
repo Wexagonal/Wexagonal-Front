@@ -14,11 +14,6 @@
                                 aria-label="Endpoint" aria-describedby="endpoint-addon">
                         </div>
                         <p class="mb-0" id="info"></p>
-                        <!--
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="cors_proxy" checked="">
-                <label class="form-check-label" for="rememberMe">CORS代理</label>
-              </div>-->
                         <div class="text-center">
                             <button type="button" onclick="login()"
                                 class="btn bg-gradient-info w-100 mt-4 mb-0">登陆</button>
@@ -46,6 +41,6 @@
         url.searchParams.set('endpoint', document.querySelector('#endpoint').value)
         url.searchParams.set('page', 'signin')
         url.searchParams.set('type', 'check')
-       WGoto(url.href)
+        WGoto(url.href)
     }
 </script>
