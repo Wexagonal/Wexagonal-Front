@@ -1,8 +1,8 @@
 {
   "name": "wexagonal_front",
-  "version": "0.0.1-beta-11",
+  "version": "0.0.1-beta-13",
   "description": "",
-  "main": "sw.js",
+  "main": "list.json",
   "directories": {
     "doc": "docs"
   },
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hexo-Warrior/HexoWarrior_Front.git"
+    "url": "git+https://github.com/Wexagonal/Wexagonal-Front.git"
   },
   "author": "",
   "license": "ISC",

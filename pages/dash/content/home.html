@@ -6,7 +6,7 @@
                     <div class="col-8">
                         <div class="numbers">
                             <p class="text-sm mb-0 text-capitalize font-weight-bold">前端版本</p>
-                            <h5 class="font-weight-bolder mb-0">
+                            <h5 class="font-weight-bolder mb-0" id="front_version">
                                 <!--WEXAGONAL_FRONT_VERSION-->
                             </h5>
                         </div>
@@ -27,7 +27,7 @@
                     <div class="col-8">
                         <div class="numbers">
                             <p class="text-sm mb-0 text-capitalize font-weight-bold">后端版本</p>
-                            <h5 class="font-weight-bolder mb-0">
+                            <h5 class="font-weight-bolder mb-0" id="backend_version">
                                 <!--WEXAGONAL_BACKEND_VERSION-->
                             </h5>
                         </div>
@@ -58,6 +58,11 @@
                                 <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
                             </a>
                             <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
+                                href="/dash?page=update&action=clear" target="_blank">
+                                尝试重装前端
+                                <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                            </a>
+                            <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto"
                                 href="javascript:say.e('概念版无法更新后端!')">
                                 尝试更新后端
                                 <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -79,3 +84,8 @@
         </div>
     </div>
 </div>
+<script>
+    if($('#front_version').innerText !== $('#backend_version').innerText) {
+       say.e('前端版本与后端版本不一致!这可能会导致额外的错误!')
+    }
+</script>
