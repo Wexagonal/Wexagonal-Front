@@ -3,7 +3,7 @@
     "name": "Wexagonal",
     "icons": [
       {
-        "src": "https://npm.elemecdn.com/wexagonal_icon@0.0.1-beta-1/wexagonal_bg.png",
+        "src": "https://npm.elemecdn.com/wexagonal_icon@0.0.1-beta-3/wexagonal_bg.png",
         "type": "image/png",
         "sizes": "512x512"
       }
