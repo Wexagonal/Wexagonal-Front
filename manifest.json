@@ -9,10 +9,10 @@
       }
     ],
     "start_url": "/404.html",
-    "background_color": "#cb0c9f",
+    "background_color": "#ffffff",
     "display": "standalone",
     "scope": "/",
-    "theme_color": "#cb0c9f",
+    "theme_color": "#ffffff",
     "shortcuts": [
       {
         "name": "Wexagonal",

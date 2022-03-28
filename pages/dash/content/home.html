@@ -75,7 +75,7 @@
                             <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
                         </div>
                     </div>
-                    <h6 class="ms-2 mt-4 mb-0">最近五日活跃次数 </h6>
+                    <h6 class="ms-2 mt-4 mb-0">最近15日活跃次数 </h6>
                     <p class="text-sm ms-2">(包括文章变动/文件变动/图床变动/博客变动)</p>
                     <div class="container border-radius-lg">
                         <div class="row">
@@ -272,7 +272,8 @@
         })
         Object.keys(data).forEach(x => {
             Object.keys(data[x]).forEach(y => {
-                count_data[y] = Object.keys(data[x][y]).reduce((a, b) => a + data[x][y][b], 0)
+                if(typeof count_data[y] === 'undefined')count_data[y]=0
+                count_data[y] += Object.keys(data[x][y]).reduce((a, b) => a + data[x][y][b], 0)
             })
         })
         count_data.total = Object.values(count_data).reduce((a, b) => a + b, 0)
