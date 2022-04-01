@@ -11,48 +11,63 @@
           <form role="form">
             <details open>
               <summary>基础类</summary>
-            <label>用户名</label>
-            <div class="mb-3">
-              <input id="username" type="text" class="form-control" placeholder="admin" aria-label="Username"
-                aria-describedby="username-addon">
-            </div>
-            <label>密码</label>
-            <div class="mb-3">
-              <input id="password" type="password" class="form-control" placeholder="***" aria-label="Password"
-                aria-describedby="password-addon">
-            </div>
+              <label>用户名</label>
+              <div class="mb-3">
+                <input id="username" type="text" class="form-control" placeholder="admin" aria-label="Username"
+                  aria-describedby="username-addon">
+              </div>
+              <label>密码</label>
+              <div class="mb-3">
+                <input id="password" type="password" class="form-control" placeholder="***" aria-label="Password"
+                  aria-describedby="password-addon">
+              </div>
             </details>
             <details open>
               <summary>社交类</summary>
-            <label>昵称</label>
-            <div class="mb-3">
-              <input id="nickname" type="text" class="form-control" placeholder="SomeBody" aria-label="Nickname"
-                aria-describedby="nickname-addon">
-            </div>
-            <label>头像URL</label>
-            <div class="mb-3">
-              <input id="avatar" type="text" class="form-control" placeholder="https://npm.elemecdn.com/wexagonal_icon"
-                aria-label="Nickname" aria-describedby="avatar-addon">
-            </div>
+              <label>昵称</label>
+              <div class="mb-3">
+                <input id="nickname" type="text" class="form-control" placeholder="SomeBody" aria-label="Nickname"
+                  aria-describedby="nickname-addon">
+              </div>
+              <label>头像URL</label>
+              <div class="mb-3">
+                <input id="avatar" type="text" class="form-control"
+                  value="https://npm.elemecdn.com/wexagonal_icon" aria-label="Nickname"
+                  aria-describedby="avatar-addon">
+              </div>
+              <!--blog url-->
+              <label>博客地址</label>
+              <div class="mb-3">
+                <input id="blog" type="text" class="form-control" value="https://wexagonal.com" aria-label="Blog"
+                  aria-describedby="blog-addon">
+              </div>
+
+              <label>给自己简单介绍几句
+              </label>
+              <div class="mb-3">
+                <textarea id="description" class="form-control" rows="3" value="这个人很懒，什么都没有留下" aria-label="Description"
+                  aria-describedby="description-addon"></textarea>
+              </div>
+
             </details>
             <details>
               <summary>自动生成</summary>
-            <label>RSA密钥[用户无需更改]</label>
-            <div class="mb-3">
-              <textarea id="rsa_priv" class="form-control" rows="3" placeholder="自动生成" aria-label="RSA"
-                aria-describedby="rsa-addon"></textarea>
-            </div>
-            <label>RSA公钥[用户无需更改]</label>
-            <div class="mb-3">
-              <textarea id="rsa_pub" class="form-control" rows="3" placeholder="自动生成" aria-label="RSA"
-                aria-describedby="rsa_public-addon"></textarea>
-            </div>
-            <label>终端域名[用户无需更改]</label>
-            <div class="mb-3">
-              <input id="domain" type="text" class="form-control" value="{{ENDPOINT_DOMAIN}}" aria-label="Domain"
-                aria-describedby="domain-addon">
-            </div>
-          </details>
+              <label>RSA密钥[用户无需更改]</label>
+              <div class="mb-3">
+                <textarea id="rsa_priv" class="form-control" rows="3" placeholder="自动生成" aria-label="RSA"
+                  aria-describedby="rsa-addon"></textarea>
+              </div>
+              <label>RSA公钥[用户无需更改]</label>
+              <div class="mb-3">
+                <textarea id="rsa_pub" class="form-control" rows="3" placeholder="自动生成" aria-label="RSA"
+                  aria-describedby="rsa_public-addon"></textarea>
+              </div>
+              <label>终端域名[用户无需更改]</label>
+              <div class="mb-3">
+                <input id="domain" type="text" class="form-control" value="{{ENDPOINT_DOMAIN}}" aria-label="Domain"
+                  aria-describedby="domain-addon">
+              </div>
+            </details>
 
 
             <div class="text-center">
@@ -80,20 +95,22 @@
   })();
 
   window.login = () => {
-    if (!$('#username').value || !$('#password').value || !$('#nickname').value || !$('#avatar').value) {
+    if (!$('#username').value || !$('#password').value) {
       $('#msg').innerHTML = '请填写完整信息!';
       return;
     }
     db.write('basic', {
       username: $(`#username`).value,
       password: $(`#password`).value,
-      nickname: $(`#nickname`).value,
-      avatar: $('#avatar').value || "https://npm.elemecdn.com/wexagonal_icon",
       social: {
         priv: $('#rsa_priv').value,
-        pub: $('#rsa_pub').value
+        pub: $('#rsa_pub').value,
+        avatar: $('#avatar').value,
+        description: $('#description').value,
+        nickname: $(`#nickname`).value || $('#username').value,
+        blog: $('#blog').value
       },
-      endpoint:$('#domain').value
+      endpoint: $('#domain').value
     })
     const url = new URL(window.location.href)
     url.searchParams.set('type', 'index')

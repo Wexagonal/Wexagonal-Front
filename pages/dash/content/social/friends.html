@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h6>好友面板</h6>
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" placeholder="添加好友域名" class="height:max-height"
+                        id="friend_enpoint">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" onclick="add_friend()">添加</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">用户
+                                </th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                    用户简介</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    状态</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    信息更新时间</th>
+                                <th
+                                    class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{API_FRIENDS_LIST}}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.add_friend = async function () {
+        const res = await fetch(`/api?page=api&action=social&type=add_friend&endpoint=${$("#friend_enpoint").value}`).then(res => res.json())
+        console.log(res)
+    }
+    window.accept_friend = async function (endpoint) {
+        const res = await fetch(`/api?page=api&action=social&type=accept_friend&endpoint=${endpoint}`).then(res => res.json())
+        console.log(res)
+    }
+    window.delete_friend = async function (endpoint) {
+        const res = await fetch(`/api?page=api&action=social&type=delete_friend&endpoint=${endpoint}`).then(res => res.json())
+        console.log(res)
+    }
+</script>
